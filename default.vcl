@@ -199,6 +199,7 @@ sub vcl_recv {
 				|| req.http.host ~ "periododesesiones.cepal.org"
 				|| req.http.host ~ "cdcc.cepal.org"
 				|| req.http.host ~ "oig.cepal.org"
+				|| req.http.host ~ "conferenciamujer.cepal.org"
 			) 	{
 			call deny_admin_drupal;
 		} else {
