@@ -1,11 +1,12 @@
-# This is a basic VCL configuration file for varnish.  See the vcl(7)
-# man page for details on VCL syntax and semantics.
+## Varnish para sitios de conferencias 
+# Usa a Drupal. Casos especiales o redirecci{on del subdominio wwww se envia a SADE
+# Mas que nada, aparte del cache, controla el acceso a la administracion de los sitios Drupal
+##################
+#  ver 2.20
+#  -> Cambio de IP SADE
 #
- 
-# TODO: Update internal subnet ACL and security.
- 
-# Define the internal network subnet.
-# These are used below to allow internal access to certain files while not
+##################
+
 # allowing access from the public internet.
 # acl internal {
 #  "192.10.0.0"/24;
@@ -49,7 +50,8 @@ backend drupal {
 #SADE
 backend sade 
 {
-   .host = "200.9.3.94";
+   #.host = "200.9.3.94";
+   .host = "10.0.40.52"
    .port = "80";
 }
 
