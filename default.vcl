@@ -51,7 +51,7 @@ backend drupal {
 backend sade 
 {
    #.host = "200.9.3.94";
-   .host = "10.0.40.52"
+   .host = "10.0.40.52";
    .port = "80";
 }
 
