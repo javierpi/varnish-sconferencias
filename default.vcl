@@ -2,8 +2,8 @@
 # Usa a Drupal. Casos especiales o redirecci{on del subdominio wwww se envia a SADE
 # Mas que nada, aparte del cache, controla el acceso a la administracion de los sitios Drupal
 ##################
-#  ver 2.20
-#  -> Cambio de IP SADE
+#  ver 2.21
+#  -> Control de acceso a la administracion sitio observatoriop10
 #
 ##################
 
@@ -205,6 +205,7 @@ sub vcl_recv {
 				|| req.http.host ~ "innovalac.cepal.org"
 				|| req.http.host ~ "foroalc2030.cepal.org"
 				|| req.http.host ~ "crm.cepal.org"
+				|| req.http.host ~ "observatoriop10.cepal.org"
 			) 	{
 			call deny_admin_drupal;
 		} else {
