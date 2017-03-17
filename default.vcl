@@ -172,6 +172,15 @@ sub vcl_recv {
 			#unset req.http.Cookie;
 			error 755 "";
 		}
+		
+		### Para conteo de emails abiertos por destinatarios
+		### se elimina cache pasando directamente al servidor de backend
+		if (req.http.host == "crm.cepal.org") {
+			if (req.url ~ "^/sites/all/modules/civicrm/extern/*" ) {
+				return (pass);
+			}
+		}
+		### Fin CRM 
 
 #		En caso de necesitar poner el sitio en mantenimiento
 #		descomentar la linea siguiente (20141027 DdelMoral:
