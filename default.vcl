@@ -215,6 +215,7 @@ sub vcl_recv {
 				|| req.http.host ~ "foroalc2030.cepal.org"
 				|| req.http.host ~ "crm.cepal.org"
 				|| req.http.host ~ "observatoriop10.cepal.org"
+                                || req.http.host ~ "conferenciaenvejecimiento.cepal.org"
 			) 	{
 			call deny_admin_drupal;
 		} else {
