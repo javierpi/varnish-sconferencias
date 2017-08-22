@@ -55,7 +55,7 @@ sub deny_admin_drupal{
 		
 		## Por ataque 24-04-15
 		std.tolower(req.url) ~ "/?q=.*$"	|| 
-		std.tolower(req.url) ~ "/user.*$" 	||
+		std.tolower(req.url) ~ "/user\/*$" 	||
 		std.tolower(req.url) ~ "/admin.*$"  || 
 		std.tolower(req.url) ~ "/node\/add.*$" 
 	){
