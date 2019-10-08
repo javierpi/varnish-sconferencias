@@ -18,7 +18,7 @@ include "/etc/varnish/deny_admin.vcl";
 acl purge {
         "10.0.17.207";
 		"10.0.17.127";  ## Andrea Carrillo
-		"10.0.0.0"/16; ## cepal santiago completa
+		"10.0.0.0"/16; ##  santiago completa
 		# para poder hacer purge desde back-end (Administracion de contenidos en Drupal)
 		 "localhost";
 		 "127.0.0.1";
@@ -58,67 +58,60 @@ backend sade
 
 sub centraliza_dominios{
 	## 
-	# CU-01: Reescribir dominio. www.cepal.cl, www.eclac.cl y www.eclac.org se redireccionan a www.cepal.org
+	# CU-01: Reescribir dominio. www.organizacion.cl, www.organizacion.cl y www.organizacion2.org se redireccionan a www.organizacion.org
 	## CU-01:------------- Desde acá 
-    if (req.http.host ~ "^(www\.)cepal\.cl" || 
-        req.http.host ~ "^(www\.)eclac\.cl"  || 
-        req.http.host ~ "^(www\.)eclac\.org" ) 
+    if (req.http.host ~ "^(www\.)organizacion\.cl" || 
+        req.http.host ~ "^(www\.)organizacion2\.cl"  || 
+        req.http.host ~ "^(www\.)organizacion2\.org" ) 
     {
-        error 750 "http://www.cepal.org" + req.url;
+        error 750 "http://www.organizacion.org" + req.url;
     } 
 	## 
-	# CU-01.1 : Reescribir dominio. *.eclac.org se redireccionan a *.cepal.org
+	# CU-01.1 : Reescribir dominio. *.organizacion2.org se redireccionan a *.organizacion.org
 	# 26-feb-2015
 	## 
-    if (req.http.host ~ "eclac\.org" ) 
+    if (req.http.host ~ "organizacion2\.org" ) 
     {
-		error 751  "http://" + regsub(req.http.host,"eclac\.org", "cepal\.org") + req.url;
+		error 751  "http://" + regsub(req.http.host,"organizacion2\.org", "organizacion\.org") + req.url;
     } 
-    if (req.http.host ~ "eclac\.cl" ) 
+    if (req.http.host ~ "organizacion2\.cl" ) 
     {
-		error 751  "http://" + regsub(req.http.host,"eclac\.cl", "cepal\.org") + req.url;
+		error 751  "http://" + regsub(req.http.host,"organizacion2\.cl", "organizacion\.org") + req.url;
     } 
-	if (req.http.host ~ "cepal\.cl" ) 
+	if (req.http.host ~ "organizacion\.cl" ) 
     {
-		error 751  "http://" + regsub(req.http.host,"cepal\.cl", "cepal\.org") + req.url;
+		error 751  "http://" + regsub(req.http.host,"organizacion\.cl", "organizacion\.org") + req.url;
     } 
 	# FIN CU-01.1 
 	# ----------------------
 	
 	## 
 	# CU-02: Redirigir a SADE dominios existentes, con código 302:
-	# socinfo.cepal.org
+	# socinfo.organizacion.org
 	# www.ilpes.cl
 	# www.ofilac.org
 	# www.eclacpos.org
-	# www.cepal.org.mx
+	# www.organizacion.org.mx
 	## CU-02:------------- Desde acá 
-	if (req.http.host ~ "^socinfo.cepal.org") 
+	if (req.http.host ~ "^socinfo.organizacion.org") 
     {
-        #error 751 "http://www.cepal.org/socinfo/" + req.url;
-		error 751 "http://www.cepal.org/socinfo" + req.url;
+		error 751 "http://www.organizacion.org/socinfo" + req.url;
     } 
 	if (req.http.host ~ "^www.ilpes.cl") 
     {
-        #error 751 "http://www.cepal.org/ilpes/" + req.url;
-		error 751 "http://www.cepal.org/ilpes" + req.url;
+		error 751 "http://www.organizacion.org/ilpes" + req.url;
     } 
 	if (req.http.host ~ "^www.ofilac.org") 
     {
-        #error 751 "http://www.cepal.org/ofilac/" + req.url;
-		error 751 "http://www.cepal.org/ofilac" + req.url;
+		error 751 "http://www.organizacion.org/ofilac" + req.url;
     }
 	if (req.http.host ~ "^www.eclacpos.org") 
     {
-        #error 751 "http://www.cepal.org/portofspain/" + req.url;
-		error 751 "http://www.cepal.org/portofspain" + req.url;
+		error 751 "http://www.organizacion.org/portofspain" + req.url;
     }
-	if (req.http.host ~ "^www.cepal.org.mx") 
+	if (req.http.host ~ "^www.organizacion.org.mx") 
     {
-		# Modificado el 9 de Junio 2015 - JPI
-        # el dominio www.cepal.org.mx no llega con parámetros, por lo que el destino no debe terminar con /
-		#error 751 "http://www.cepal.org/mexico/" + req.url;
-		error 751 "http://www.cepal.org/mexico";
+		error 751 "http://www.organizacion.org/mexico";
     }
 	## CU-02 - HASTA ACÁ
 }
@@ -126,7 +119,7 @@ sub centraliza_dominios{
 # Respond to incoming requests.
 sub vcl_recv {
 ## 
-	# CU-01: Reescribir dominio. www.cepal.cl, www.eclac.cl y www.eclac.org se redireccionan a www.cepal.org
+	# CU-01: Reescribir dominio. www.organizacion.cl, www.organizacion.cl y www.organizacion2.org se redireccionan a www.organizacion.org
 	## 
 	# CU-01 y 02: Redirigir a SADE dominios existentes:
 	##
@@ -153,7 +146,7 @@ sub vcl_recv {
 	######
 	
 	## CU-01:------------- Desde acá 
-    if (req.http.host == "www.cepal.org") {
+    if (req.http.host == "www.organizacion.org") {
 		set req.backend = sade;
 		
 		# Force client.ip forwarding
@@ -175,7 +168,7 @@ sub vcl_recv {
 		
 		### Para conteo de emails abiertos por destinatarios
 		### se elimina cache pasando directamente al servidor de backend
-		if (req.http.host == "crm.cepal.org") {
+		if (req.http.host == "crm.organizacion.org") {
 			if (req.url ~ "^/sites/all/modules/civicrm/extern/*" ) {
 				return (pass);
 			}
@@ -183,9 +176,6 @@ sub vcl_recv {
 		### Fin CRM 
 
 #		En caso de necesitar poner el sitio en mantenimiento
-#		descomentar la linea siguiente (20141027 DdelMoral:
-#
-#		error 500 "Site under maintenance";
 
 		# Allow the backend to serve up stale content if it is responding slowly.
 		set req.grace = 600s;
@@ -201,22 +191,14 @@ sub vcl_recv {
 		 
 		
 		
-		if (req.http.host ~ "conferenciaelac.cepal.org" 
-				|| req.http.host ~ "crpd.cepal.org" 
-				|| req.http.host ~ "crds.cepal.org" 
-				|| req.http.host ~ "negociacionp10.cepal.org" 
-				|| req.http.host ~ "cea.cepal.org" 
-				|| req.http.host ~ "crp-ilpes.cepal.org" 
-				|| req.http.host ~ "periododesesiones.cepal.org"
-				|| req.http.host ~ "cdcc.cepal.org"
-				|| req.http.host ~ "oig.cepal.org"
-				|| req.http.host ~ "conferenciamujer.cepal.org"
-				|| req.http.host ~ "innovalac.cepal.org"
-				|| req.http.host ~ "foroalc2030.cepal.org"
-				|| req.http.host ~ "crm.cepal.org"
-				|| req.http.host ~ "observatoriop10.cepal.org"
-                || req.http.host ~ "conferenciaenvejecimiento.cepal.org"
-                || req.http.host ~ "observatoriosocial.cepal.org"
+		if (req.http.host ~ "conferenciaelac.organizacion.org" 
+				|| req.http.host ~ "crpd.organizacion.org" 
+				|| req.http.host ~ "crds.organizacion.org" 
+				|| req.http.host ~ "negociacionp10.organizacion.org" 
+				|| req.http.host ~ "cea.organizacion.org" 
+				|| req.http.host ~ "observatoriop10.organizacion.org"
+                		|| req.http.host ~ "conferenciaenvejecimiento.organizacion.org"
+                		|| req.http.host ~ "observatoriosocial.organizacion.org"
 			) 	{
 			call deny_admin_drupal;
 		} else {
@@ -327,10 +309,9 @@ sub vcl_fetch {
 sub vcl_error {
 
 	# En caso de mantenimiento forzado a estos sitios residentes en apache2-p2
-	# 20141027 by DdelMoral & Javier Pi
 
-     if ( (obj.status == 755) && (req.http.host ~ "prebisch.cepal.org" || req.http.host ~ "prebisch.eclac.org" || req.http.host ~ "periododesesiones.cepal.org"  || req.http.host ~ "caribbeantest.eclac.org" )) {
-		# if (req.http.host ~ "prebisch.cepal.org" || req.http.host ~ "prebisch.eclac.org" || req.http.host ~ "periododesesiones.cepal.org" ) {
+     if ( (obj.status == 755) && (req.http.host ~ "prebisch.organizacion.org" || req.http.host ~ "prebisch.organizacion.org" || req.http.host ~ "periododesesiones.organizacion.org"  || req.http.host ~ "caribbeantest.organizacion2.org" )) {
+		# if (req.http.host ~ "prebisch.organizacion.org" || req.http.host ~ "prebisch.organizacion.org" || req.http.host ~ "periododesesiones.organizacion.org" ) {
 		set obj.status = 500;
         set obj.http.Content-Type = "text/html; charset=utf-8";
         synthetic std.fileread("/etc/varnish/maintenance.html");
@@ -339,7 +320,7 @@ sub vcl_error {
 
 
 	## 
-	# CU-01: Reescribir dominio. www.cepal.cl, www.eclac.cl y www.eclac.org se redireccionan a www.cepal.org
+	# CU-01: Reescribir dominio. www.organizacion2.cl, www.organizacion.cl y www.organizacion2.org se redireccionan a www.organizacion.org
 	## CU-01:------------- Desde acá 
 	if (obj.status == 750) {
 		set obj.http.Location = obj.response;
@@ -351,12 +332,7 @@ sub vcl_error {
 	
 	## 
 	# CU-02: Reescribir dominio. 
-	# socinfo.cepal.org
-	# www.ilpes.cl
-	# www.ofilac.org
-	# www.eclacpos.org
-	# www.cepal.org.mx
-	## CU-02:------------- Desde acá 
+
 	if (obj.status == 751) {
 		set obj.http.Location = obj.response;
         #HTTP 302 para indicar redirección temporal - Así estaba en IIS
@@ -402,7 +378,7 @@ sub vcl_error {
 	# Redirect to some other URL in the case of a homepage failure.
 	if (req.url ~ "^/?$") {
 		set obj.status = 302;
-		set obj.http.Location = "http://www.cepal.org/";
+		set obj.http.Location = "http://www.organizacion.org/";
 	}
 	# Otherwise redirect to the homepage, which will likely be in the cache.
 	set obj.http.Content-Type = "text/html; charset=utf-8";
